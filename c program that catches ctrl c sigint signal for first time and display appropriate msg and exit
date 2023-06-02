@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+
+int interrupt_count = 0;
+
+void handle_sigint(int signum) {
+    if (interrupt_count == 0) {
+        printf("\nCtrl+C signal received. Press Ctrl+C again to exit.\n");
+        interrupt_count++;
+    } else {
+        printf("\nExiting program.\n");
+        exit(0);
+    }
+}
+
+int main() {
+    // Register the signal handler for SIGINT
+    signal(SIGINT, handle_sigint);
+
+    while (1) {
+        // Your program logic goes here
+        // ...
+
+        // Sleep for a short period to allow the program to continue running
+        // You can remove this or modify the sleep duration as per your requirements
+        usleep(100000);
+    }
+
+    return 0;
+}
