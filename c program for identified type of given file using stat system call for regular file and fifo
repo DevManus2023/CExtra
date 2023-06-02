@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+int main() {
+    char *filename = "example.txt";  // Replace with the name of your file
+    // Get information about the file
+    struct stat file_info;
+    if (stat(filename, &file_info) == -1) {
+        printf("Error accessing file information.\n");
+        return 1;
+    }
+    // Check if the file is a regular file
+    if (S_ISREG(file_info.st_mode)) {
+        printf("%s is a regular file.\n", filename);
+    }
+    // Check if the file is a FIFO (named pipe)
+    if (S_ISFIFO(file_info.st_mode)) {
+        printf("%s is a FIFO (named pipe).\n", filename);
+    }
+    return 0;
+}
