@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <time.h>
+
+int main() {
+    // Open the current directory
+    DIR *dir = opendir(".");
+    if (dir == NULL) {
+        printf("Error opening directory.\n");
+        return 1;
+    }
+
+    // Get the current month
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int target_month = tm->tm_mon + 1;  // Months are zero-based
+
+    // Iterate over the directory entries
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        // Get information about the file
+        struct stat info;
+        stat(entry->d_name, &info);
+
+        // Get the file's creation time
+        struct tm *file_tm = localtime(&info.st_ctime);
+        int file_month = file_tm->tm_mon + 1;
+
+        // Check if the file was created in the target month
+        if (file_month == target_month) {
+            printf("%s\n", entry->d_name);
+        }
+    }
+
+    // Close the directory
+    closedir(dir);
+
+    return 0;
+}
